@@ -6,44 +6,27 @@
 #include<string>
 #include<vector>
 using namespace std;
-int age,mark,id;
 int student::count=0;
-string name;
 void deleteStudent(string name);
 int search(string name);
-void studentInput(){
-    cout<<"Name: ";
-    cin>>name;
-    cout<<"Age: ";
-    cin>>age;
-    cout<<"mark: ";
-    cin>>mark;
-    cout<<"id: ";
-    cin>>id;
-}
-void display(int i){
-        cout<<"------------------------------"<<endl;
-        cout<<"Name: "<<data[i].s.name<<endl;
-        cout<<"Age: "<<data[i].s.age<<endl;
-        cout<<"Mark: "<<data[i].s.mark<<endl;
-        cout<<"Roll: "<<data[i].s.roll<<endl;
-        cout<<"ID: "<<data[i].s.id<<endl;
-        cout<<"------------------------------"<<endl;
-    
-}
 void changeroll(){
     for(int i=0;i<data.size();i++){
-        data[i].s.roll=i+1;
+        data[i].roll=i+1;
     }
 }
-fstudent f;
+fstudent f(false);
+void load(){
+    data.clear();
+    fstudent f;
+}
 void saveandexit(){
     f.insert();
-    cout<<"exiting..."<<endl;
+    cout<<"data saved successfully"<<endl;
 }
 int main(){
+    load();
     cout<<"Welcome to student management system"<<endl;
-    cout<<"dislplay(d), create(c), sort by name(n), sort by mark(m), search(s), delete(r), exit(e)"<<endl;
+    cout<<"display(d), create(c), sort by name(n), sort by cgpa, search(s), delete(r), exit(e), count(0)"<<endl;
     while (true)
     {
         char cho;
@@ -52,52 +35,75 @@ int main(){
         switch (cho)
         {
         case 'c':
-        studentInput();
             {
-                student s1(age,name,mark,id);
+                student s1(true);
                 data.push_back(s1);
             }
             break;
         case 'd':
-        for(int i=0;i<data.size();i++){
-            display(i);
+        if(data.empty()){
+            cout<<"student file is empty"<<endl;
+        } else {
+            for(int i=0;i<data.size();i++){
+                data[i].display();
+            }
         }
             break;
         case 'n':
         {
             cout<<"sorting by name"<<endl;
             sort(data.begin(),data.end(),[](const student& a, const student& b){
-                return a.s.name < b.s.name;
+                return a.name < b.name;
             });
             changeroll();
         }
             break;
         case 'm':
         {
-            cout<<"sorting by mark"<<endl;
+            cout<<"sorting by CGPA"<<endl;
             sort(data.begin(),data.end(),[](const student& a, const student& b){
-                return a.s.mark > b.s.mark;
+                return a.cgpa>b.cgpa;
             });
         }
             break;
         case 's':
         {
+            string name;
             cout<<"enter name or roll number: ";
             cin>>name;
             int index = search(name);
             if(index != -1){
-                display(index);
+                data[index].display();
             }
         }
             break;
         case 'r':
         {
+            string name;
             cout<<"enter name or roll number: ";
             cin>>name;
             deleteStudent(name);
         }
             break;
         case 'e':
+        {
+            string name;
+            cout<<"enter name or roll number: ";
+            cin>>name;
+            change(name);
+        }
+            break;
+            case 'l':
+            load();
+            break;
+        case '0':
+        cout<<"number of students: "<<student::count<<endl;
+            break;
+        case '1':
+        saveandexit();
+            break;
+
+        case 'x':
         saveandexit();
             exit(0);
         
@@ -109,16 +115,20 @@ int main(){
     return 0;
 }
 int search(string name){
+    if(data.empty()){
+        cout<<"student file is empty"<<endl;
+        return -1;
+    }
     try{
         int roll=stoi(name);
         sort(data.begin(),data.end(),[](const student& a, const student& b){
-            return a.s.roll < b.s.roll;
+            return a.roll < b.roll;
         });
         changeroll();
         return roll-1;
     }catch(const std::invalid_argument& e){
         for(int i=0;i<data.size();i++){
-            if(strcmp(data[i].s.name,name.c_str())==0){
+            if(strcmp(data[i].name,name.c_str())==0){
                 return i;
             }
         }
@@ -135,5 +145,16 @@ void deleteStudent(string name){
         data.erase(data.begin()+index);
         changeroll();
         cout<<"student deleted successfully"<<endl;
+        student::count--;
+    }
+}
+void change(string name){
+    int index = search(name);
+    if(index != -1){
+        data[index].nameinput();
+        data[index].ageinput();
+        data[index].markinput();
+        data[index].idinput();
+        cout<<"student record updated successfully"<<endl;
     }
 }

@@ -5,29 +5,60 @@
 #include<cstring>
 #include<vector>
 using namespace std;
-struct info{
+class student{
+    public:
     int age;
     int roll;
-    int mark,id;
+    float cgpa;
+    int id;
     char name[30];
-
-};
-class student{
-    private:
     static int count;
-    public:
-    info s;
-    student(){
-        cout<<"running student deails constructor"<<endl;
+    student (){}
+    student(bool input){
+        if(input){
+            nameinput();
+            ageinput();
+            markinput();
+            idinput();
+        }
+        count++;
+        roll=count;
     }
     
-    student(int age,string name,int mark,int id){
-        s.age=age;
-        strcpy(s.name,name.c_str());
-        s.mark=mark;
-        count++;
-        s.roll=count;
-        s.id=id;
+    void display(){
+        cout<<"------------------------------"<<endl;
+        cout<<"Name: "<<name<<endl;
+        cout<<"Age: "<<age<<endl;
+        cout<<"CGPA: "<<cgpa<<endl;
+        cout<<"Roll: "<<roll<<endl;
+        cout<<"ID: "<<id<<endl;
+        cout<<"------------------------------"<<endl;
+    }
+    void nameinput(){
+        cout<<"Name: ";
+        string sname;
+        getline(cin,sname);
+        cin.ignore();
+        char cname[30];
+        strcpy(cname,sname.c_str());
+        for(int i=0;i<strlen(cname);i++){
+            if(!isalpha(cname[i]))
+                cout<<"invalid name, only alphabets allowed"<<endl;
+            else
+            name[i] = toupper(cname[i]);
+        }
+    }
+    void ageinput(){
+        cout<<"Age: ";
+        cin>>age;
+    }
+    void markinput(){
+        cout<<"CGPA: ";
+        cin>>cgpa;
+    }
+    void idinput(){
+        cout<<"id: ";
+        cin>>id;
     }
 
 

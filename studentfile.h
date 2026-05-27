@@ -11,7 +11,7 @@ class fstudent{
     private:
     fstream file;
     public:
-    fstudent(){
+    fstudent(bool load){
         file.open("student.txt",ios::binary|ios::in);
         if(!file){
             cout<<"file not found"<<endl;
@@ -23,7 +23,9 @@ class fstudent{
             }
         }
         file.close();
+        student::count=data.size();
     }
+    fstudent() : fstudent(true){}
     void insert(){
         file.open("student.txt",ios::binary|ios::out);
         if(file){

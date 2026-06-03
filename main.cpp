@@ -4,6 +4,7 @@
 #include<cstring>
 #include<algorithm>
 #include<string>
+#include<cstdlib>
 #include<vector>
 using namespace std;
 int student::count=0;
@@ -35,7 +36,7 @@ int main(){
         switch (cho)
         {
         case 'c':
-            {
+        {
                 student s1(true);
                 data.push_back(s1);
             }
@@ -66,9 +67,9 @@ int main(){
             });
         }
             break;
-        case 's':
-        {
-            string name;
+            case 's':
+            {
+                string name;
             cout<<"enter name or roll number: ";
             cin>>name;
             int index = search(name);
@@ -77,40 +78,40 @@ int main(){
             }
         }
             break;
-        case 'r':
-        {
+            case 'r':
+            {
             string name;
             cout<<"enter name or roll number: ";
             cin>>name;
             deleteStudent(name);
         }
             break;
-        case 'e':
+            case 'e':
         {
             string name;
             cout<<"enter name or roll number: ";
             cin>>name;
             change(name);
         }
-            break;
-            case 'l':
-            load();
-            break;
+        break;
+        case 'l':
+        load();
+        break;
         case '0':
         cout<<"number of students: "<<student::count<<endl;
-            break;
+        break;
         case '1':
         saveandexit();
-            break;
-
+        break;
+        
         case 'x':
         saveandexit();
-            exit(0);
+        exit(0);
         
         default:
         cout<<"invalid input"<<endl;
-            break;
-        }
+        break;
+    }
     }
     return 0;
 }
@@ -120,7 +121,7 @@ int search(string name){
         return -1;
     }
     try{
-        int roll=stoi(name);
+        int roll=std::atoi(name.c_str());
         sort(data.begin(),data.end(),[](const student& a, const student& b){
             return a.roll < b.roll;
         });

@@ -13,8 +13,13 @@ class student{
     int id;
     char name[30];
     static int count;
-    student (){}
-    student(bool input){
+    
+    student() : age(0), roll(0), cgpa(0.0), id(0) {
+        memset(name, 0, sizeof(name));
+    }
+    
+    student(bool input) : age(0), roll(0), cgpa(0.0), id(0) {
+        memset(name, 0, sizeof(name));
         if(input){
             nameinput();
             ageinput();

@@ -4,108 +4,166 @@
 #include<cstring>
 #include<algorithm>
 #include<string>
-#include<cstdlib>
 #include<vector>
 using namespace std;
 int student::count=0;
-void deleteStudent(string name);
-int search(string name);
-void changeroll(){
-    for(int i=0;i<data.size();i++){
-        data[i].roll=i+1;
-    }
-}
 fstudent f(false);
 void load(){
-    data.clear();
+    studentmap.clear();
     fstudent f;
+}
+int isempty(){
+    if(studentmap.empty()){
+        cout<<"student file is empty"<<endl;
+        return 1;
+    }
+    return 0;
 }
 void saveandexit(){
     f.insert();
-    cout<<"data saved successfully"<<endl;
+    checksave = true;
+    cout<<"studentdata saved successfully"<<endl;
+}
+                                 //search
+
+int search(string name){
+    if(studentmap.empty()){
+        cout<<"student file is empty"<<endl;
+        return -1;
+    }
+    try{
+        int id=std::stoi(name.c_str());
+        if(studentmap.count(id)==0){
+            cout<<"student not found"<<endl;
+            return -1;
+        }
+        return id;
+    }catch(const std::invalid_argument& e){
+            name = checkalpa(name);
+            if(name!=""){
+                for(auto it:studentmap){
+                    if(name == it.second.name){
+                        student::studentdisplay(it.first);
+                        return it.first;
+                    }
+                }
+                cout<<"student not found"<<endl;
+                return -1;
+        }
+        return -1;
+    }catch(const std::exception& e){
+        cout<<"student not found"<<endl;
+        return -1;
+    }
+}
+
+                     //delete student
+
+void deleteStudent(string name){
+    int id = search(name);
+    if(id != -1){
+        studentmap.erase(id);
+        cout<<"student deleted successfully"<<endl;
+        student::count--;
+        checksave = false;
+    }
+}
+void menu(){
+    cout<<"\tWelcome to student management system"<<endl;
+    cout<<"\t\t1. create new student"<<endl;
+    cout<<"\t\t2. display all students"<<endl;
+    cout<<"\t\t3. sort by name"<<endl;
+    cout<<"\t\t4. sort by CGPA"<<endl;
+    cout<<"\t\t5. search student"<<endl;
+    cout<<"\t\t6. delete student"<<endl;
+    cout<<"\t\t7. total student count"<<endl;
+    cout<<"\t\t8. edit student details"<<endl;
+    cout<<"\t\t0. exit"<<endl;
 }
 int main(){
     load();
-    cout<<"Welcome to student management system"<<endl;
-    cout<<"display(d), create(c), sort by name(n), sort by cgpa, search(s), delete(r), exit(e), count(0)"<<endl;
+    menu();
     while (true)
     {
-        char cho;
-        cout<<"enter:";
-        cin>>cho;
-        switch (cho)
+        int choi ;
+        try{
+            string cho;
+            cout<<"\tenter:";
+            cin>>cho;
+        choi = stoi(cho);
+        }
+        catch(const std::exception& e){
+            cout<<"invalid input, please enter a number"<<endl;
+            continue;
+        }
+        switch (choi)
         {
-        case 'c':
+        case 1:
         {
-                student s1(true);
-                data.push_back(s1);
+             student s1(true);
+        }
+            break;
+        case 2:
+            if(isempty()) break;
+            for(auto it:studentmap){
+                student::studentdisplay(it.first);
             }
+        break;
+        case 3:
             break;
-        case 'd':
-        if(data.empty()){
-            cout<<"student file is empty"<<endl;
-        } else {
-            for(int i=0;i<data.size();i++){
-                data[i].display();
-            }
-        }
+        case 4:
+        
             break;
-        case 'n':
-        {
-            cout<<"sorting by name"<<endl;
-            sort(data.begin(),data.end(),[](const student& a, const student& b){
-                return a.name < b.name;
-            });
-            changeroll();
-        }
-            break;
-        case 'm':
-        {
-            cout<<"sorting by CGPA"<<endl;
-            sort(data.begin(),data.end(),[](const student& a, const student& b){
-                return a.cgpa>b.cgpa;
-            });
-        }
-            break;
-            case 's':
-            {
-                string name;
-            cout<<"enter name or roll number: ";
-            cin>>name;
-            int index = search(name);
-            if(index != -1){
-                data[index].display();
-            }
-        }
-            break;
-            case 'r':
+            case 5:
             {
             string name;
-            cout<<"enter name or roll number: ";
+            cout<<"enter name or unique id: ";
             cin>>name;
+            if(isempty()) break;
+            student::studentdisplay(search(name));
+        }
+            break;
+            case 6:
+        {
+            string name;
+            cout<<"enter name or unique id: ";
+            cin>>name;
+            if(isempty()) break;
             deleteStudent(name);
         }
-            break;
-            case 'e':
-        {
-            string name;
-            cout<<"enter name or roll number: ";
-            cin>>name;
-            change(name);
-        }
         break;
-        case 'l':
-        load();
-        break;
-        case '0':
+        case 7:
         cout<<"number of students: "<<student::count<<endl;
         break;
-        case '1':
+        case 8:
+        {
+            string name;
+            cout<<"enter name or unique id: ";
+            cin>>name;
+            if(isempty()) break;
+            int id = search(name);
+            if(id != -1){
+                student s;
+                s.editstudent(id);
+            }
+        }
+        break;
+        case 9:
         saveandexit();
         break;
         
-        case 'x':
-        saveandexit();
+        case 0:
+        if(!checksave){
+            char choice;
+            cout<<"you have unsaved changes, do you want to save before exiting? (y/n): ";
+            cin>>choice;
+            if(choice == 'y' || choice == 'Y'){
+                saveandexit();
+            }
+            else
+                cout<<"exiting without saving..."<<endl;
+            
+        }
         exit(0);
         
         default:
@@ -114,48 +172,4 @@ int main(){
     }
     }
     return 0;
-}
-int search(string name){
-    if(data.empty()){
-        cout<<"student file is empty"<<endl;
-        return -1;
-    }
-    try{
-        int roll=std::atoi(name.c_str());
-        sort(data.begin(),data.end(),[](const student& a, const student& b){
-            return a.roll < b.roll;
-        });
-        changeroll();
-        return roll-1;
-    }catch(const std::invalid_argument& e){
-        for(int i=0;i<data.size();i++){
-            if(strcmp(data[i].name,name.c_str())==0){
-                return i;
-            }
-        }
-        cout<<"student not found or invalid input"<<endl;
-        return -1;
-    }catch(const std::exception& e){
-        cout<<"student not found"<<endl;
-        return -1;
-    }
-}
-void deleteStudent(string name){
-    int index = search(name);
-    if(index != -1){
-        data.erase(data.begin()+index);
-        changeroll();
-        cout<<"student deleted successfully"<<endl;
-        student::count--;
-    }
-}
-void change(string name){
-    int index = search(name);
-    if(index != -1){
-        data[index].nameinput();
-        data[index].ageinput();
-        data[index].markinput();
-        data[index].idinput();
-        cout<<"student record updated successfully"<<endl;
-    }
 }

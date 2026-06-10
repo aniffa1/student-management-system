@@ -7,10 +7,9 @@
 #include<vector>
 using namespace std;
 int student::count=0;
-fstudent f(false);
 void load(){
     studentmap.clear();
-    fstudent f;
+    readstudentfile();
 }
 int isempty(){
     if(studentmap.empty()){
@@ -20,30 +19,23 @@ int isempty(){
     return 0;
 }
 void saveandexit(){
-    f.insert();
+    insert();
     checksave = true;
     cout<<"studentdata saved successfully"<<endl;
 }
                                  //search
 
 int search(string name){
-    if(studentmap.empty()){
-        cout<<"student file is empty"<<endl;
-        return -1;
-    }
     try{
-        int id=std::stoi(name.c_str());
-        if(studentmap.count(id)==0){
-            cout<<"student not found"<<endl;
-            return -1;
+        int id = stoi(name);
+        if(studentmap.count(id)!=0){
+            return id;
         }
-        return id;
     }catch(const std::invalid_argument& e){
             name = checkalpa(name);
             if(name!=""){
                 for(auto it:studentmap){
                     if(name == it.second.name){
-                        student::studentdisplay(it.first);
                         return it.first;
                     }
                 }
@@ -116,10 +108,10 @@ int main(){
             break;
             case 5:
             {
+                if(isempty()) break;
             string name;
             cout<<"enter name or unique id: ";
             cin>>name;
-            if(isempty()) break;
             student::studentdisplay(search(name));
         }
             break;

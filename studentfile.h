@@ -8,11 +8,8 @@
 using namespace std;
 map<int,s_details> studentmap;
 bool checksave = true;
-class fstudent{
-    private:
-    fstream file;
-    public:
-    fstudent(bool load){
+    void readstudentfile(){
+         fstream file;
         file.open("student.data",ios::binary|ios::in);
         if(!file){
             cout<<"file not found"<<endl;
@@ -28,8 +25,8 @@ class fstudent{
         file.close();
         student::count=studentmap.size();
     }
-    fstudent() : fstudent(true){}
     void insert(){
+        fstream file;
         file.open("student.data",ios::binary|ios::out);
         if(file){
             cout<<"writing to file..."<<endl;
@@ -41,5 +38,4 @@ class fstudent{
         file.close();
     }
     }
-};
 #endif

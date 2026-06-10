@@ -18,7 +18,7 @@ extern map<int,s_details> studentmap;
 
 string checkalpa(string name){
     for(int i=0;i<name.length();i++){
-        if(!isalpha(name[i])){
+        if(!isalpha(name[i])||isspace(name[i])){
             cout<<"invalid name, only alphabets allowed"<<endl;
             return "";
         }
@@ -42,10 +42,6 @@ class student{
             markinput();
             idinput();
             checksave = false;
-            }catch(const int e){
-            cout<<e<<endl;
-            cout<<"returning to main menu..."<<endl;
-            return;
             }catch(const invalid_argument& e){
                 cout<<"invalid input, please enter valid data"<<endl;
                 cout<<"returning to main menu..."<<endl;

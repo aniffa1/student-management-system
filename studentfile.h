@@ -1,14 +1,16 @@
 #ifndef STUDENTFILE_H
 #define STUDENTFILE_H
-#include "student.h"
 #include<iostream>
 #include<string>
 #include<fstream>
 #include<vector>
+#include"student.h"
 using namespace std;
-map<int,s_details> studentmap;
 bool checksave = true;
-    void readstudentfile(){
+class student;
+struct s_details;
+
+    void readstudentfile(student& obj){
          fstream file;
         file.open("student.data",ios::binary|ios::in);
         if(!file){
@@ -19,19 +21,19 @@ bool checksave = true;
            s_details s;
             while(file.read((char*)&id,sizeof(id))){
                 file.read((char*)&s,sizeof(s));
-                studentmap[id] = s;
+                obj.studentmap[id] = s;
             }
         }
         file.close();
-        student::count=studentmap.size();
+        student::count=obj.studentmap.size();
     }
-    void insert(){
+    void insert(auto& obj){
         fstream file;
         file.open("student.data",ios::binary|ios::out);
         if(file){
             cout<<"writing to file..."<<endl;
         
-        for(auto it:studentmap){
+        for(auto it:obj.studentmap){
             file.write((char*)&it.first,sizeof(it.first));
             file.write((char*)&it.second,sizeof(it.second));
         }

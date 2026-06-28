@@ -1,5 +1,5 @@
-#include "student.h"
 #include "studentfile.h"
+#include "student.h"
 #include<iostream>
 #include<cstring>
 #include<algorithm>
@@ -7,59 +7,37 @@
 #include<vector>
 using namespace std;
 int student::count=0;
-void load(){
-    studentmap.clear();
-    readstudentfile();
-}
-int isempty(){
-    if(studentmap.empty()){
-        cout<<"student file is empty"<<endl;
-        return 1;
-    }
-    return 0;
-}
-void saveandexit(){
-    insert();
+void saveandexit(student& obj){
+    insert(obj);
     checksave = true;
     cout<<"studentdata saved successfully"<<endl;
+    exit(0);    
 }
-                                 //search
-
-int search(string name){
+int search(std::string name,student& obj){
     try{
         int id = stoi(name);
-        if(studentmap.count(id)!=0){
+        if(student::count!=0){
             return id;
         }
     }catch(const std::invalid_argument& e){
             name = checkalpa(name);
             if(name!=""){
-                for(auto it:studentmap){
+                for(auto it:obj.getdetail()){
                     if(name == it.second.name){
                         return it.first;
                     }
                 }
-                cout<<"student not found"<<endl;
+                cout<<"not found"<<endl;
                 return -1;
-        }
+            }
         return -1;
     }catch(const std::exception& e){
-        cout<<"student not found"<<endl;
+        cout<<"unexpected error"<<endl;
         return -1;
     }
+    return -1;
 }
 
-                     //delete student
-
-void deleteStudent(string name){
-    int id = search(name);
-    if(id != -1){
-        studentmap.erase(id);
-        cout<<"student deleted successfully"<<endl;
-        student::count--;
-        checksave = false;
-    }
-}
 void menu(){
     cout<<"\tWelcome to student management system"<<endl;
     cout<<"\t\t1. create new student"<<endl;
@@ -73,16 +51,16 @@ void menu(){
     cout<<"\t\t0. exit"<<endl;
 }
 int main(){
-    load();
     menu();
+    student s;
     while (true)
     {
-        int choi ;
+        int choi;
         try{
             string cho;
             cout<<"\tenter:";
             cin>>cho;
-        choi = stoi(cho);
+        choi = std::stoi(cho);
         }
         catch(const std::exception& e){
             cout<<"invalid input, please enter a number"<<endl;
@@ -91,15 +69,11 @@ int main(){
         switch (choi)
         {
         case 1:
-        {
-             student s1(true);
-        }
+            s.addstudent();
             break;
         case 2:
-            if(isempty()) break;
-            for(auto it:studentmap){
-                student::studentdisplay(it.first);
-            }
+            if(s.isempty()) break;
+            s.displayall();
         break;
         case 3:
             break;
@@ -108,20 +82,20 @@ int main(){
             break;
             case 5:
             {
-                if(isempty()) break;
-            string name;
+            if(s.isempty()) break;
+            std::string name;
             cout<<"enter name or unique id: ";
             cin>>name;
-            student::studentdisplay(search(name));
-        }
+            s.studentdisplay(search(name,s));
+            }
             break;
             case 6:
         {
             string name;
             cout<<"enter name or unique id: ";
             cin>>name;
-            if(isempty()) break;
-            deleteStudent(name);
+            if(s.isempty()) break;
+            s.deleteStudent(name);
         }
         break;
         case 7:
@@ -132,16 +106,15 @@ int main(){
             string name;
             cout<<"enter name or unique id: ";
             cin>>name;
-            if(isempty()) break;
-            int id = search(name);
+            if(s.isempty()) break;
+            int id = search(name,s);
             if(id != -1){
-                student s;
                 s.editstudent(id);
             }
         }
         break;
         case 9:
-        saveandexit();
+        saveandexit(s);
         break;
         
         case 0:
@@ -150,7 +123,7 @@ int main(){
             cout<<"you have unsaved changes, do you want to save before exiting? (y/n): ";
             cin>>choice;
             if(choice == 'y' || choice == 'Y'){
-                saveandexit();
+                saveandexit(s);
             }
             else
                 cout<<"exiting without saving..."<<endl;

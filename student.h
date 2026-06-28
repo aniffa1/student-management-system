@@ -6,7 +6,6 @@
 #include<cctype>
 #include<vector>
 #include<map>
-#include "studentfile.h"
 using namespace std;
 struct s_details{
     int age;
@@ -45,6 +44,7 @@ class student{
     student(){}
     void load(){
         studentmap.clear();
+        readstudentfile(*this);
     }
     int isempty(){
     if(studentmap.empty()){
@@ -76,6 +76,7 @@ class student{
     }
 
     void studentdisplay(int sid){
+        if(sid == -1) return;
         auto temp = studentmap[sid];
         cout<<"------------------------------"<<endl;
             cout<<"Id: "<<sid<<endl;
@@ -177,7 +178,7 @@ class student{
         checksave = false;
         cout<<"student details updated successfully"<<endl;
     }
-    map<int,s_details> getdetail(){
+    const map<int,s_details> getdetail() const{
         return studentmap;
     }
    

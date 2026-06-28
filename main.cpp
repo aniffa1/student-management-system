@@ -11,13 +11,15 @@ void saveandexit(student& obj){
     insert(obj);
     checksave = true;
     cout<<"studentdata saved successfully"<<endl;
-    exit(0);    
 }
 int search(std::string name,student& obj){
     try{
         int id = stoi(name);
-        if(student::count!=0){
+        if(obj.getdetail().count(id)){
             return id;
+        } else{
+            cout<<"id not found"<<endl;
+            return -1;
         }
     }catch(const std::invalid_argument& e){
             name = checkalpa(name);
@@ -37,6 +39,30 @@ int search(std::string name,student& obj){
     }
     return -1;
 }
+void sortbyname(student& obj){
+    vector<pair<int,s_details>> v;
+    for(auto it:obj.getdetail()){
+        v.push_back(it);
+    }
+    sort(v.begin(),v.end(),[](pair<int,s_details> a,pair<int,s_details> b){
+        return strcmp(a.second.name,b.second.name)<0;
+    });
+    for(auto it:v){
+        obj.studentdisplay(it.first);
+    }
+}
+void sortbycgpa(student& obj){
+    vector<pair<int,s_details>> v;
+    for(auto it:obj.getdetail()){
+        v.push_back(it);
+    }
+    sort(v.begin(),v.end(),[](pair<int,s_details> a,pair<int,s_details> b){
+        return a.second.cgpa > b.second.cgpa;
+    });
+    for(auto it:v){
+        obj.studentdisplay(it.first);
+    }
+}
 
 void menu(){
     cout<<"\tWelcome to student management system"<<endl;
@@ -48,11 +74,13 @@ void menu(){
     cout<<"\t\t6. delete student"<<endl;
     cout<<"\t\t7. total student count"<<endl;
     cout<<"\t\t8. edit student details"<<endl;
+    cout<<"\t\t9. save file"<<endl;
     cout<<"\t\t0. exit"<<endl;
 }
 int main(){
     menu();
     student s;
+    s.load();
     while (true)
     {
         int choi;
@@ -76,9 +104,12 @@ int main(){
             s.displayall();
         break;
         case 3:
+            if(s.isempty()) break;
+            sortbyname(s);
             break;
         case 4:
-        
+            if(s.isempty()) break;
+            sortbycgpa(s);
             break;
             case 5:
             {
